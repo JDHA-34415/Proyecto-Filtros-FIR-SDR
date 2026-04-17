@@ -2,26 +2,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
 
-# Parámetros Globales [cite: 13-31]
-fs = 1e6            # Frecuencia de muestreo (1 MHz)
-numtaps = 65       # Orden: 64 taps
-window = 'hamming'  # Ventana: Hamming
+fs = 1e6            
+numtaps = 65      
+window = 'hamming'  
 
-# --- 1. DISEÑO FILTRO PASO ALTO ---
-# Frecuencia de corte: 200 kHz [cite: 20]
+
 cutoff_high = 200e3
 taps_high = signal.firwin(numtaps, cutoff_high, fs=fs, window=window, pass_zero=False)
 
-# --- 2. DISEÑO FILTRO PASO BANDA ---
-# Banda de paso: 150-250 kHz [cite: 24]
 band = [150e3, 250e3]
 taps_band = signal.firwin(numtaps, band, fs=fs, window=window, pass_zero=False)
 
-# --- 3. CÁLCULO DE RESPUESTAS ---
+
 w_h, h_h = signal.freqz(taps_high, worN=8000)
 w_b, h_b = signal.freqz(taps_band, worN=8000)
 
-# --- 4. VISUALIZACIÓN ---
+
 plt.figure(figsize=(12, 6))
 
 # Gráfica Paso Alto
