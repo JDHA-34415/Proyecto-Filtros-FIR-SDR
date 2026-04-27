@@ -1,21 +1,21 @@
 """
-Proyecto: Filtro Digital FIR en Python para Señales SDR [cite: 1]
+Proyecto: Filtro Digital FIR en Python para Señales SDR 
 Semana 3: Generación de señal multi-tono (50+200+300 kHz) y transmisión continua 
 usando el hardware ADALM-Pluto.
-Objetivo: Validar la transmisión de señales I/Q antes de la fase de filtrado[cite: 9].
+Objetivo: Validar la transmisión de señales I/Q antes de la fase de filtrado.
 """
 import numpy as np
-import adi  # Librería para interactuar con el ADALM-Pluto [cite: 39]
+import adi  # Librería para interactuar con el ADALM-Pluto 
 import matplotlib.pyplot as plt
 
-# 1. Configuración de parámetros técnicos [cite: 13, 39]
+# 1. Configuración de parámetros técnicos 
 fs = int(1e6)           # Frecuencia de muestreo: 1 MHz
 center_freq = int(900e6) # Frecuencia central de transmisión (900 MHz)
 num_muestras = 10000    # Tamaño del buffer de muestras
 
-# 2. Inicialización del Hardware PlutoSDR [cite: 39]
+# 2. Inicialización del Hardware PlutoSDR 
 try:
-    sdr = adi.Pluto("ip:pluto.local") # Conexión por IP [cite: 39]
+    sdr = adi.Pluto("ip:pluto.local") # Conexión por IP 
     sdr.sample_rate = fs
     sdr.tx_lo = center_freq
     sdr.tx_hardwaregain_chan0 = -10   # Ajuste de ganancia para evitar distorsión
@@ -24,27 +24,27 @@ except Exception as e:
     print(f"Error: No se encontró el PlutoSDR. Detalle: {e}")
     exit()
 
-# 3. Generación de la señal Multi-tono (I/Q Compleja) [cite: 3, 31]
+# 3. Generación de la señal Multi-tono (I/Q Compleja) 
 t = np.arange(0, num_muestras) / fs
 
-# Generación de los tres tonos requeridos [cite: 28, 29, 30]
-tono1 = np.exp(1j * 2 * np.pi * 50e3 * t)   # 50 kHz (para probar Paso Bajo) [cite: 28]
-tono2 = np.exp(1j * 2 * np.pi * 200e3 * t)  # 200 kHz (para probar Paso Banda) [cite: 30]
-tono3 = np.exp(1j * 2 * np.pi * 300e3 * t)  # 300 kHz (para probar Paso Alto) [cite: 29]
+# Generación de los tres tonos requeridos 
+tono1 = np.exp(1j * 2 * np.pi * 50e3 * t)   # 50 kHz (para probar Paso Bajo) 
+tono2 = np.exp(1j * 2 * np.pi * 200e3 * t)  # 200 kHz (para probar Paso Banda) 
+tono3 = np.exp(1j * 2 * np.pi * 300e3 * t)  # 300 kHz (para probar Paso Alto) 
 
-# Suma de señales y normalización de amplitud [cite: 31]
+# Suma de señales y normalización de amplitud 
 # Dividimos por 3 para mantener la amplitud dentro de los límites y evitar clipping
 señal_multi = (tono1 + tono2 + tono3) / 3
 señal_multi *= 2**14 # Escalamiento para el DAC de 12-bit del Pluto
 
-# 4. Transmisión Continua [cite: 39, 64]
+# 4. Transmisión Continua 
 sdr.tx_cyclic_buffer = True # Repetir la señal automáticamente
 sdr.tx(señal_multi)
 
 print("Transmitiendo señal multi-tono (50, 200, 300 kHz)...")
 print("Presiona Ctrl+C para detener la ejecución.")
 
-# 5. Visualización del espectro (Validación mediante FFT) [cite: 11, 64]
+# 5. Visualización del espectro (Validación mediante FFT) 
 X_fft = np.fft.fft(señal_multi)
 f = np.fft.fftfreq(len(señal_multi), 1/fs)
 
