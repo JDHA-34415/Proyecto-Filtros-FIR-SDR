@@ -1,1 +1,1 @@
-
+Avance Semana 1: Se completó exitosamente el diseño del filtro paso bajo (LPF) utilizando la función scipy.signal.firwin, estableciendo una frecuencia de corte de 100 kHz con un orden de 64 taps y ventana de Hamming . Los resultados fueron validados mediante la gráfica de respuesta en frecuencia, confirmando la implementación correcta de las ecuaciones de diseño y la capacidad de atenuación requerida por las especificaciones técnicas del proyecto.
