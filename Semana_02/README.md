@@ -1,1 +1,1 @@
-
+Avance Semana 2: Durante esta fase se diseñaron los filtros paso alto (HPF) y paso banda (BPF), manteniendo la consistencia técnica con un orden de 64 taps y el uso de la ventana Hamming para minimizar el rizado . El filtro paso alto se configuró con un corte de 200 kHz, mientras que el paso banda se ajustó para el rango de 150-250 kHz, cubriendo así todas las regiones espectrales necesarias para el procesamiento posterior de las señales de prueba .
